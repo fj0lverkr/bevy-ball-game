@@ -1,11 +1,7 @@
-use crate::Star;
 use bevy::{prelude::*, window::PrimaryWindow};
 use rand::random;
 
-use super::resources::StarSpawnTimer;
-
-pub const NUM_STARS: usize = 10;
-pub const STAR_SIZE: f32 = 30.0; //star size in pixels
+use super::{components::Star, resources::StarSpawnTimer, NUM_STARS};
 
 pub fn spawn_stars(
     mut commands: Commands,
