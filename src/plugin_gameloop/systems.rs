@@ -1,6 +1,6 @@
 use bevy::{app::AppExit, prelude::*, window::PrimaryWindow};
 
-use crate::events::GameOver;
+use super::events::GameOver;
 
 pub fn spawn_camera(mut commands: Commands, window_query: Query<&Window, With<PrimaryWindow>>) {
     let window: &Window = window_query.get_single().unwrap();

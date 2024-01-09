@@ -1,4 +1,4 @@
-use crate::{events::GameOver, plugin_score::resources::Score};
+use crate::{plugin_gameloop::events::GameOver, plugin_score::resources::Score};
 use bevy::prelude::*;
 
 use super::resources::HighScores;
