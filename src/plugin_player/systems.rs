@@ -1,12 +1,11 @@
 use crate::plugin_score::resources::Score;
 use crate::plugin_star::components::Star;
 use crate::plugin_star::STAR_SIZE;
-use crate::Player;
 use bevy::audio::PlaybackMode;
 use bevy::{prelude::*, window::PrimaryWindow};
 
-pub const PLAYER_SIZE: f32 = 64.0; //player sprite size in pixels
-pub const PLAYER_SPEED: f32 = 500.0;
+use super::components::Player;
+use super::{PLAYER_SIZE, PLAYER_SPEED};
 
 pub fn spawn_player(
     mut commands: Commands,

@@ -1,10 +1,10 @@
-use crate::events::GameOver;
-use crate::plugin_player::{components::Player, systems::PLAYER_SIZE};
+use crate::plugin_player::components::Player;
 use crate::plugin_score::resources::Score;
-use crate::Enemy;
+use crate::{events::GameOver, plugin_player::PLAYER_SIZE};
 use bevy::{audio::PlaybackMode, prelude::*, window::PrimaryWindow};
 use rand::random;
 
+use super::components::Enemy;
 use super::resources::EnemySpawnTimer;
 
 pub const NUM_ENEMIES: usize = 4;

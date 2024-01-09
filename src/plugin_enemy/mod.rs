@@ -21,6 +21,6 @@ impl Plugin for EnemyPlugin {
                     enemy_hit_player,
                     spawn_enemies_over_time,
                 ),
-            )
+            );
     }
 }
