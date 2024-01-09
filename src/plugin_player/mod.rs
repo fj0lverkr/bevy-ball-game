@@ -10,11 +10,26 @@ pub const PLAYER_SPEED: f32 = 500.0;
 
 pub struct PlayerPlugin;
 
+#[derive(SystemSet, Hash, Clone, Debug, Eq, PartialEq)]
+pub struct MovementSystemSet;
+
+#[derive(SystemSet, Hash, Clone, Debug, Eq, PartialEq)]
+pub struct MovementConfinementSystemSet;
+
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_player).add_systems(
+        app.configure_sets(
             Update,
-            (player_movement, confine_player_movement, player_hit_star),
+            MovementSystemSet.before(MovementConfinementSystemSet),
+        )
+        .add_systems(Startup, spawn_player)
+        .add_systems(
+            Update,
+            (
+                player_movement.in_set(MovementSystemSet),
+                confine_player_movement.in_set(MovementConfinementSystemSet),
+                player_hit_star,
+            ),
         );
     }
 }
