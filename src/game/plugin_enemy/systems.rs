@@ -1,6 +1,11 @@
 use bevy::{audio::PlaybackMode, prelude::*, window::PrimaryWindow};
 use rand::random;
 
+use crate::game::plugin_gameloop::events::GameOver;
+use crate::game::plugin_player::components::Player;
+use crate::game::plugin_player::PLAYER_SIZE;
+use crate::game::plugin_score::resources::Score;
+
 use super::components::Enemy;
 use super::resources::EnemySpawnTimer;
 

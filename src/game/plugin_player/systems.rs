@@ -1,6 +1,6 @@
-use crate::plugin_score::resources::Score;
-use crate::plugin_star::components::Star;
-use crate::plugin_star::STAR_SIZE;
+use crate::game::plugin_score::resources::Score;
+use crate::game::plugin_star::components::Star;
+use crate::game::plugin_star::STAR_SIZE;
 use bevy::audio::PlaybackMode;
 use bevy::{prelude::*, window::PrimaryWindow};
 
