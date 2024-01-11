@@ -14,6 +14,8 @@ use plugin_score::ScorePlugin;
 use plugin_star::StarPlugin;
 use systems::*;
 
+use crate::GameState;
+
 pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
@@ -26,7 +28,10 @@ impl Plugin for GamePlugin {
                 ScorePlugin,
                 StarPlugin,
             ))
-            .add_systems(Update, toggle_simulation);
+            .add_systems(
+                Update,
+                toggle_simulation.run_if(in_state(GameState::GameRunning)),
+            );
     }
 }
 
