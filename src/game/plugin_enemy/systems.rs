@@ -18,35 +18,38 @@ pub fn spawn_enemies(
     mut commands: Commands,
     window_query: Query<&Window, With<PrimaryWindow>>,
     asset_server: Res<AssetServer>,
+    enemy_query: Query<Entity, With<Enemy>>,
 ) {
-    let window = window_query.get_single().unwrap();
-    for _ in 0..NUM_ENEMIES {
-        let mut random_x = random::<f32>() * window.width();
-        let mut random_y = random::<f32>() * window.height();
-        let player_transform =
-            Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 0.0);
-        let mut enemy_transform = Transform::from_xyz(random_x, random_y, 0.0);
+    if enemy_query.is_empty() {
+        let window = window_query.get_single().unwrap();
+        for _ in 0..NUM_ENEMIES {
+            let mut random_x = random::<f32>() * window.width();
+            let mut random_y = random::<f32>() * window.height();
+            let player_transform =
+                Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 0.0);
+            let mut enemy_transform = Transform::from_xyz(random_x, random_y, 0.0);
 
-        while enemy_transform
-            .translation
-            .distance(player_transform.translation)
-            < PLAYER_SAFE_ZONE
-        {
-            random_x = random::<f32>() * window.width();
-            random_y = random::<f32>() * window.height();
-            enemy_transform = Transform::from_xyz(random_x, random_y, 0.0);
+            while enemy_transform
+                .translation
+                .distance(player_transform.translation)
+                < PLAYER_SAFE_ZONE
+            {
+                random_x = random::<f32>() * window.width();
+                random_y = random::<f32>() * window.height();
+                enemy_transform = Transform::from_xyz(random_x, random_y, 0.0);
+            }
+
+            commands.spawn((
+                SpriteBundle {
+                    transform: enemy_transform,
+                    texture: asset_server.load("sprites/ball_red_large.png"),
+                    ..default()
+                },
+                Enemy {
+                    direction: Vec2::new(random::<f32>(), random::<f32>()).normalize(),
+                },
+            ));
         }
-
-        commands.spawn((
-            SpriteBundle {
-                transform: enemy_transform,
-                texture: asset_server.load("sprites/ball_red_large.png"),
-                ..default()
-            },
-            Enemy {
-                direction: Vec2::new(random::<f32>(), random::<f32>()).normalize(),
-            },
-        ));
     }
 }
 
@@ -131,13 +134,13 @@ pub fn confine_enemy_movement(
 
 pub fn enemy_hit_player(
     mut commands: Commands,
-    mut player_query: Query<(Entity, &Transform), With<Player>>,
+    player_query: Query<&Transform, With<Player>>,
     mut game_over_event_writer: EventWriter<GameOver>,
     enemy_query: Query<&Transform, With<Enemy>>,
     asset_server: Res<AssetServer>,
     score: Res<Score>,
 ) {
-    if let Ok((player_entity, player_transform)) = player_query.get_single_mut() {
+    if let Ok(player_transform) = player_query.get_single() {
         for enemy_transform in enemy_query.iter() {
             let distance = player_transform
                 .translation
@@ -153,7 +156,6 @@ pub fn enemy_hit_player(
                         ..default()
                     },
                 });
-                commands.entity(player_entity).despawn();
                 game_over_event_writer.send(GameOver { score: score.value });
             }
         }
@@ -196,5 +198,11 @@ pub fn spawn_enemies_over_time(
                 direction: Vec2::new(random::<f32>(), random::<f32>()).normalize(),
             },
         ));
+    }
+}
+
+pub fn despawn_enemies(mut commands: Commands, enemy_query: Query<Entity, With<Enemy>>) {
+    for enemy in enemy_query.iter() {
+        commands.entity(enemy).despawn();
     }
 }

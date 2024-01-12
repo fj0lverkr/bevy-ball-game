@@ -6,15 +6,22 @@ mod systems;
 use resources::*;
 use systems::*;
 
+use crate::GameState;
+
 pub struct ScorePlugin;
 
 impl Plugin for ScorePlugin {
     fn build(&self, app: &mut App) {
-        app.init_resource::<Score>()
-            .init_resource::<HighScores>()
+        app.init_resource::<HighScores>()
+            .add_systems(OnEnter(GameState::GameRunning), init_score)
             .add_systems(
                 Update,
-                (update_score, update_highscores, highscores_updated),
-            );
+                (
+                    update_score.run_if(in_state(GameState::GameRunning)),
+                    update_highscores,
+                    highscores_updated,
+                ),
+            )
+            .add_systems(OnExit(GameState::GameRunning), remove_score);
     }
 }

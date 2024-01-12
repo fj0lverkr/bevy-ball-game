@@ -8,8 +8,8 @@ use main_menu::MainMenuPlugin;
 
 fn main() {
     App::new()
-        .add_plugins((DefaultPlugins, MainMenuPlugin, GamePlugin))
         .add_state::<GameState>()
+        .add_plugins((DefaultPlugins, MainMenuPlugin, GamePlugin))
         .run();
 }
 

@@ -6,6 +6,10 @@ mod systems;
 use resources::*;
 use systems::*;
 
+use crate::GameState;
+
+use super::SimulationState;
+
 pub struct EnemyPlugin;
 
 #[derive(SystemSet, Hash, Clone, Debug, Eq, PartialEq)]
@@ -21,7 +25,7 @@ impl Plugin for EnemyPlugin {
                 Update,
                 MovementSystemSet.before(MovementConfinementSystemSet),
             )
-            .add_systems(Startup, spawn_enemies)
+            .add_systems(OnEnter(GameState::GameRunning), spawn_enemies)
             .add_systems(
                 Update,
                 (
@@ -30,7 +34,10 @@ impl Plugin for EnemyPlugin {
                     confine_enemy_movement.in_set(MovementConfinementSystemSet),
                     enemy_hit_player,
                     spawn_enemies_over_time,
-                ),
-            );
+                )
+                    .run_if(in_state(GameState::GameRunning))
+                    .run_if(in_state(SimulationState::Running)),
+            )
+            .add_systems(OnExit(GameState::GameRunning), despawn_enemies);
     }
 }

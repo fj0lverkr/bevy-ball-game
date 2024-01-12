@@ -23,3 +23,11 @@ pub fn highscores_updated(highscores: Res<HighScores>) {
         println!("Highscores: {:?}", highscores);
     }
 }
+
+pub fn init_score(mut commands: Commands) {
+    commands.insert_resource(Score::default());
+}
+
+pub fn remove_score(mut commands: Commands) {
+    commands.remove_resource::<Score>();
+}

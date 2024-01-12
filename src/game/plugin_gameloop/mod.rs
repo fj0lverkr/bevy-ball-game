@@ -12,6 +12,13 @@ impl Plugin for GameLoopPlugin {
     fn build(&self, app: &mut App) {
         app.add_event::<GameOver>()
             .add_systems(Startup, spawn_camera)
-            .add_systems(Update, (exit_game, handle_game_over));
+            .add_systems(
+                Update,
+                (
+                    handle_game_over,
+                    transition_to_running_state,
+                    handle_esc_pressed,
+                ),
+            );
     }
 }

@@ -11,16 +11,19 @@ pub fn spawn_player(
     mut commands: Commands,
     window_query: Query<&Window, With<PrimaryWindow>>,
     asset_server: Res<AssetServer>,
+    player_query: Query<Entity, With<Player>>,
 ) {
-    let window = window_query.get_single().unwrap();
-    commands.spawn((
-        SpriteBundle {
-            transform: Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 0.0),
-            texture: asset_server.load("sprites/ball_blue_large.png"),
-            ..default()
-        },
-        Player {},
-    ));
+    if player_query.is_empty() {
+        let window = window_query.get_single().unwrap();
+        commands.spawn((
+            SpriteBundle {
+                transform: Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 0.0),
+                texture: asset_server.load("sprites/ball_blue_large.png"),
+                ..default()
+            },
+            Player {},
+        ));
+    }
 }
 
 pub fn player_movement(
@@ -113,5 +116,11 @@ pub fn player_hit_star(
                 });
             }
         }
+    }
+}
+
+pub fn despawn_player(mut commands: Commands, player_query: Query<Entity, With<Player>>) {
+    if let Ok(player) = player_query.get_single() {
+        commands.entity(player).despawn();
     }
 }
