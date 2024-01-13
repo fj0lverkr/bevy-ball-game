@@ -12,42 +12,47 @@ pub fn spawn_camera(mut commands: Commands, window_query: Query<&Window, With<Pr
     });
 }
 
-pub fn handle_game_over(mut commands: Commands, mut game_over_event_reader: EventReader<GameOver>) {
+pub fn handle_game_over(
+    mut game_over_event_reader: EventReader<GameOver>,
+    mut next_game_state: ResMut<NextState<GameState>>,
+) {
     for event in game_over_event_reader.read() {
-        commands.insert_resource(NextState(Some(GameState::GameOver)));
+        next_game_state.set(GameState::GameOver);
         println!("Final score: {}", event.score);
     }
 }
 
 pub fn transition_to_running_state(
-    mut commands: Commands,
     keyboard_input: Res<Input<KeyCode>>,
     game_state: Res<State<GameState>>,
+    mut next_game_state: ResMut<NextState<GameState>>,
+    mut next_simulation_state: ResMut<NextState<SimulationState>>,
 ) {
     if (keyboard_input.just_pressed(KeyCode::Return)
         || keyboard_input.just_pressed(KeyCode::NumpadEnter))
         && **game_state != GameState::GameRunning
     {
-        commands.insert_resource(NextState(Some(GameState::GameRunning)));
-        commands.insert_resource(NextState(Some(SimulationState::Running)));
+        next_game_state.set(GameState::GameRunning);
+        next_simulation_state.set(SimulationState::Running);
         println!("transitioned to GameRunning state.");
     }
 }
 
 pub fn handle_esc_pressed(
-    mut commands: Commands,
     keyboard_input: Res<Input<KeyCode>>,
     game_state: Res<State<GameState>>,
     mut app_exit_event_writer: EventWriter<AppExit>,
+    mut next_game_state: ResMut<NextState<GameState>>,
+    mut next_simulation_state: ResMut<NextState<SimulationState>>,
 ) {
     if keyboard_input.just_pressed(KeyCode::Escape) {
         if **game_state == GameState::GameRunning {
-            commands.insert_resource(NextState(Some(GameState::MainMenu)));
-            commands.insert_resource(NextState(Some(SimulationState::Paused)));
+            next_game_state.set(GameState::MainMenu);
+            next_simulation_state.set(SimulationState::Paused);
             println!("transitioned to MainMenu state")
         } else if **game_state == GameState::MainMenu {
-            commands.insert_resource(NextState(Some(GameState::GameRunning)));
-            commands.insert_resource(NextState(Some(SimulationState::Running)));
+            next_game_state.set(GameState::GameRunning);
+            next_simulation_state.set(SimulationState::Running);
             println!("transitioned to GameRunning state.");
         } else {
             app_exit_event_writer.send(AppExit);
