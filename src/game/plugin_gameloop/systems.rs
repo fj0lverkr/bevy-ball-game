@@ -1,6 +1,6 @@
 use bevy::{app::AppExit, prelude::*, window::PrimaryWindow};
 
-use crate::{game::SimulationState, GameState};
+use crate::GameState;
 
 use super::events::GameOver;
 
@@ -26,14 +26,12 @@ pub fn transition_to_running_state(
     keyboard_input: Res<Input<KeyCode>>,
     game_state: Res<State<GameState>>,
     mut next_game_state: ResMut<NextState<GameState>>,
-    mut next_simulation_state: ResMut<NextState<SimulationState>>,
 ) {
     if (keyboard_input.just_pressed(KeyCode::Return)
         || keyboard_input.just_pressed(KeyCode::NumpadEnter))
         && **game_state != GameState::GameRunning
     {
         next_game_state.set(GameState::GameRunning);
-        next_simulation_state.set(SimulationState::Running);
         println!("transitioned to GameRunning state.");
     }
 }
@@ -43,16 +41,13 @@ pub fn handle_esc_pressed(
     game_state: Res<State<GameState>>,
     mut app_exit_event_writer: EventWriter<AppExit>,
     mut next_game_state: ResMut<NextState<GameState>>,
-    mut next_simulation_state: ResMut<NextState<SimulationState>>,
 ) {
     if keyboard_input.just_pressed(KeyCode::Escape) {
         if **game_state == GameState::GameRunning {
             next_game_state.set(GameState::MainMenu);
-            next_simulation_state.set(SimulationState::Paused);
             println!("transitioned to MainMenu state")
         } else if **game_state == GameState::MainMenu {
             next_game_state.set(GameState::GameRunning);
-            next_simulation_state.set(SimulationState::Running);
             println!("transitioned to GameRunning state.");
         } else {
             app_exit_event_writer.send(AppExit);
