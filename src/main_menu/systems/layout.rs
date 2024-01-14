@@ -2,11 +2,14 @@ use bevy::prelude::*;
 
 use crate::main_menu::{
     components::{MainMenu, PlayButton, QuitButton},
-    styles::{BUTTON_COLOR, BUTTON_STYLE},
+    styles::{
+        get_button_text_style, get_title_text_style, BUTTON_STYLE, IMAGE_STYLE, MAIN_MENU_STYLE,
+        NORMAL_BUTTON_COLOR, TITLE_STYLE,
+    },
 };
 
 pub fn spawn_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let main_menu_entity = build_main_menu(&mut commands, &asset_server);
+    let _main_menu_entity = build_main_menu(&mut commands, &asset_server);
 }
 
 pub fn despawn_main_menu(mut commands: Commands, main_menu_query: Query<Entity, With<MainMenu>>) {
@@ -19,29 +22,47 @@ pub fn build_main_menu(commands: &mut Commands, asset_server: &Res<AssetServer>)
     let main_menu_entity = commands
         .spawn((
             NodeBundle {
-                style: Style {
-                    width: Val::Percent(100.0),
-                    height: Val::Percent(100.0),
-                    flex_direction: FlexDirection::Column,
-                    justify_content: JustifyContent::Center,
-                    align_items: AlignItems::Center,
-                    column_gap: Val::Px(8.0),
-                    row_gap: Val::Px(8.0),
-                    ..default()
-                },
-                background_color: Color::RED.into(),
+                style: MAIN_MENU_STYLE,
                 ..default()
             },
             MainMenu,
         ))
         .with_children(|parent| {
             // == Title ==
+            parent
+                .spawn(NodeBundle {
+                    style: TITLE_STYLE,
+                    ..default()
+                })
+                .with_children(|parent| {
+                    parent.spawn(ImageBundle {
+                        style: IMAGE_STYLE,
+                        image: asset_server.load("sprites/ball_blue_large.png").into(),
+                        ..default()
+                    });
+                    parent.spawn(TextBundle {
+                        text: Text {
+                            sections: vec![TextSection::new(
+                                "Ball Game",
+                                get_title_text_style(asset_server),
+                            )],
+                            alignment: TextAlignment::Center,
+                            ..default()
+                        },
+                        ..default()
+                    });
+                    parent.spawn(ImageBundle {
+                        style: IMAGE_STYLE,
+                        image: asset_server.load("sprites/ball_red_large.png").into(),
+                        ..default()
+                    });
+                });
             // == Play Button ==
             parent
                 .spawn((
                     ButtonBundle {
                         style: BUTTON_STYLE,
-                        background_color: BUTTON_COLOR.into(),
+                        background_color: NORMAL_BUTTON_COLOR.into(),
                         ..default()
                     },
                     PlayButton,
@@ -51,11 +72,7 @@ pub fn build_main_menu(commands: &mut Commands, asset_server: &Res<AssetServer>)
                         text: Text {
                             sections: vec![TextSection::new(
                                 "Play",
-                                TextStyle {
-                                    font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-                                    font_size: 32.0,
-                                    color: Color::WHITE,
-                                },
+                                get_button_text_style(asset_server),
                             )],
                             alignment: TextAlignment::Center,
                             ..default()
@@ -68,7 +85,7 @@ pub fn build_main_menu(commands: &mut Commands, asset_server: &Res<AssetServer>)
                 .spawn((
                     ButtonBundle {
                         style: BUTTON_STYLE,
-                        background_color: BUTTON_COLOR.into(),
+                        background_color: NORMAL_BUTTON_COLOR.into(),
                         ..default()
                     },
                     QuitButton,
@@ -78,11 +95,7 @@ pub fn build_main_menu(commands: &mut Commands, asset_server: &Res<AssetServer>)
                         text: Text {
                             sections: vec![TextSection::new(
                                 "Quit",
-                                TextStyle {
-                                    font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-                                    font_size: 32.0,
-                                    color: Color::WHITE,
-                                },
+                                get_button_text_style(asset_server),
                             )],
                             alignment: TextAlignment::Center,
                             ..default()
