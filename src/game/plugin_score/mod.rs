@@ -14,7 +14,6 @@ impl Plugin for ScorePlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<HighScores>()
             .init_resource::<Score>()
-            .add_systems(OnEnter(GameState::GameRunning), init_score)
             .add_systems(
                 Update,
                 (
@@ -22,7 +21,6 @@ impl Plugin for ScorePlugin {
                     update_highscores,
                     highscores_updated,
                 ),
-            )
-            .add_systems(OnExit(GameState::GameRunning), remove_score);
+            );
     }
 }
