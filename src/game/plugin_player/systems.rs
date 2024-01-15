@@ -104,7 +104,6 @@ pub fn player_hit_star(
                 .distance(star_transform.translation);
             let treshhold = PLAYER_SIZE / 2.0 + STAR_SIZE / 2.0;
             if distance <= treshhold {
-                println!("Player touched star, increase score!");
                 score.value += 1;
                 commands.entity(star_entity).despawn();
                 commands.spawn(AudioBundle {

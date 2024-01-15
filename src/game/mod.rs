@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 mod plugin_enemy;
 mod plugin_gameloop;
+mod plugin_hud;
 mod plugin_player;
 mod plugin_score;
 mod plugin_star;
@@ -9,6 +10,7 @@ mod systems;
 
 use plugin_enemy::EnemyPlugin;
 use plugin_gameloop::GameLoopPlugin;
+use plugin_hud::HudPlugin;
 use plugin_player::PlayerPlugin;
 use plugin_score::ScorePlugin;
 use plugin_star::StarPlugin;
@@ -27,6 +29,7 @@ impl Plugin for GamePlugin {
                 PlayerPlugin,
                 ScorePlugin,
                 StarPlugin,
+                HudPlugin,
             ))
             .add_systems(OnEnter(GameState::GameRunning), pause_simulation)
             .add_systems(
