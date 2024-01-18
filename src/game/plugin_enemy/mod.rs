@@ -33,6 +33,7 @@ impl Plugin for EnemyPlugin {
                     update_enemy_direction,
                     confine_enemy_movement.in_set(MovementConfinementSystemSet),
                     enemy_hit_player,
+                    enemy_hit_enemy,
                     spawn_enemies_over_time,
                 )
                     .run_if(in_state(GameState::GameRunning))

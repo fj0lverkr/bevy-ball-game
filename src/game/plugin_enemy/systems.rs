@@ -206,3 +206,22 @@ pub fn despawn_enemies(mut commands: Commands, enemy_query: Query<Entity, With<E
         commands.entity(enemy).despawn();
     }
 }
+
+pub fn enemy_hit_enemy(
+    mut enemy_query: Query<(Entity, &Transform, &mut Enemy), With<Enemy>>,
+    other_enemy_query: Query<(Entity, &Transform), With<Enemy>>,
+) {
+    for (enemy_entity, enemy_transform, mut enemy) in enemy_query.iter_mut() {
+        for (other_entity, other_transform) in other_enemy_query.iter() {
+            if enemy_entity != other_entity {
+                let distance = enemy_transform
+                    .translation
+                    .distance(other_transform.translation);
+                if distance <= ENEMY_SIZE {
+                    enemy.direction = -enemy.direction; //TODO: correct bouncing direction and
+                                                        //prevent enemies from spawning on eachother.
+                }
+            }
+        }
+    }
+}
