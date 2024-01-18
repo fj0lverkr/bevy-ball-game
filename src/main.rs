@@ -3,6 +3,7 @@ use bevy::prelude::*;
 mod game;
 mod main_menu;
 mod pauze_screen;
+mod shared;
 
 use game::GamePlugin;
 use main_menu::MainMenuPlugin;
