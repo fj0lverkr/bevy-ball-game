@@ -34,6 +34,7 @@ impl Plugin for EnemyPlugin {
                     confine_enemy_movement.in_set(MovementConfinementSystemSet),
                     enemy_hit_player,
                     enemy_hit_enemy,
+                    enemy_hit_star,
                     spawn_enemies_over_time,
                 )
                     .run_if(in_state(GameState::GameRunning))

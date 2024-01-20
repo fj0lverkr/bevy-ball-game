@@ -7,6 +7,8 @@ use crate::game::plugin_gameloop::events::GameOver;
 use crate::game::plugin_player::components::Player;
 use crate::game::plugin_player::PLAYER_SIZE;
 use crate::game::plugin_score::resources::Score;
+use crate::game::plugin_star::components::Star;
+use crate::game::plugin_star::STAR_SIZE;
 
 use super::components::Enemy;
 use super::resources::EnemySpawnTimer;
@@ -215,6 +217,23 @@ pub fn enemy_hit_enemy(mut enemy_query: Query<(&Transform, &mut Enemy), With<Ene
         let distance = transform1.translation.distance(transform2.translation);
         if distance <= ENEMY_SIZE + 0.01 {
             swap(&mut enemy1.direction, &mut enemy2.direction);
+        }
+    }
+}
+
+pub fn enemy_hit_star(
+    mut commands: Commands,
+    enemy_query: Query<&Transform, With<Enemy>>,
+    star_query: Query<(Entity, &Transform), With<Star>>,
+) {
+    for enemy_transform in enemy_query.iter() {
+        for (star_entity, star_transform) in star_query.iter() {
+            let distance = enemy_transform
+                .translation
+                .distance(star_transform.translation);
+            if distance <= ENEMY_SIZE / 2.0 + STAR_SIZE / 2.0 {
+                commands.entity(star_entity).despawn();
+            }
         }
     }
 }
