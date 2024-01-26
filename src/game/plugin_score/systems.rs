@@ -9,6 +9,10 @@ pub fn update_score(score: Res<Score>) {
     }
 }
 
+pub fn reset_scores(mut score: ResMut<Score>) {
+    score.value = 0;
+}
+
 pub fn update_highscores(
     mut game_over_event_reader: EventReader<GameOver>,
     mut highscores: ResMut<HighScores>,

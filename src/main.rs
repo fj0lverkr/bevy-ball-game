@@ -1,11 +1,13 @@
 use bevy::prelude::*;
 
 mod game;
+mod game_over_screen;
 mod main_menu;
 mod pauze_screen;
 mod shared;
 
 use game::GamePlugin;
+use game_over_screen::GameOverScreenPlugin;
 use main_menu::MainMenuPlugin;
 use pauze_screen::PauzeScreenPlugin;
 
@@ -16,6 +18,7 @@ fn main() {
             DefaultPlugins,
             MainMenuPlugin,
             PauzeScreenPlugin,
+            GameOverScreenPlugin,
             GamePlugin,
         ))
         .run();

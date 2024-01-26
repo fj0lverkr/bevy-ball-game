@@ -18,7 +18,6 @@ pub fn handle_game_over(
 ) {
     for event in game_over_event_reader.read() {
         next_game_state.set(GameState::GameOver);
-        println!("Final score: {}", event.score);
     }
 }
 
@@ -31,7 +30,6 @@ pub fn handle_esc_pressed(
     if keyboard_input.just_pressed(KeyCode::Escape) {
         if **game_state == GameState::GameRunning {
             next_game_state.set(GameState::MainMenu);
-            println!("transitioned to MainMenu state")
         } else {
             app_exit_event_writer.send(AppExit);
         }
