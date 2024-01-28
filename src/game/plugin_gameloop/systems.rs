@@ -16,7 +16,7 @@ pub fn handle_game_over(
     mut game_over_event_reader: EventReader<GameOver>,
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
-    for event in game_over_event_reader.read() {
+    for _event in game_over_event_reader.read() {
         next_game_state.set(GameState::GameOver);
     }
 }

@@ -4,7 +4,7 @@ mod plugin_enemy;
 mod plugin_gameloop;
 mod plugin_hud;
 mod plugin_player;
-mod plugin_score;
+pub(crate) mod plugin_score;
 mod plugin_star;
 mod systems;
 

@@ -1,8 +1,9 @@
 use bevy::prelude::*;
 
 use crate::{
+    game::plugin_score::resources::Score,
     game_over_screen::{
-        components::{GameOverScreen, RestartGameButton},
+        components::{ExitGameButton, GameOverScreen, RestartGameButton},
         styles::GAME_OVER_SCREEN_STYLE,
     },
     shared::styles::{
@@ -10,8 +11,12 @@ use crate::{
     },
 };
 
-pub fn spawn_game_over_screen(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let _screen_entity = build_screen(&mut commands, &asset_server);
+pub fn spawn_game_over_screen(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    score: Res<Score>,
+) {
+    let _screen_entity = build_screen(&mut commands, &asset_server, &score);
 }
 
 pub fn despawn_game_over_screen(
@@ -23,7 +28,11 @@ pub fn despawn_game_over_screen(
     }
 }
 
-fn build_screen(commands: &mut Commands, asset_server: &Res<AssetServer>) -> Entity {
+fn build_screen(
+    commands: &mut Commands,
+    asset_server: &Res<AssetServer>,
+    score: &Res<Score>,
+) -> Entity {
     let screen_entity: Entity = commands
         .spawn((
             NodeBundle {
@@ -35,10 +44,22 @@ fn build_screen(commands: &mut Commands, asset_server: &Res<AssetServer>) -> Ent
         ))
         .with_children(|parent| {
             // == Game Over screen title text ==
+            let final_score = format!("Final score: {}", score.value);
             parent.spawn(TextBundle {
                 text: Text {
                     sections: vec![TextSection::new(
                         "Game Over!",
+                        get_title_text_style(asset_server),
+                    )],
+                    alignment: TextAlignment::Center,
+                    ..default()
+                },
+                ..default()
+            });
+            parent.spawn(TextBundle {
+                text: Text {
+                    sections: vec![TextSection::new(
+                        final_score,
                         get_title_text_style(asset_server),
                     )],
                     alignment: TextAlignment::Center,
@@ -61,6 +82,29 @@ fn build_screen(commands: &mut Commands, asset_server: &Res<AssetServer>) -> Ent
                         text: Text {
                             sections: vec![TextSection::new(
                                 "Continue",
+                                get_button_text_style(asset_server),
+                            )],
+                            alignment: TextAlignment::Center,
+                            ..default()
+                        },
+                        ..default()
+                    });
+                });
+            // == Quit game button ==
+            parent
+                .spawn((
+                    ButtonBundle {
+                        style: BUTTON_STYLE,
+                        background_color: NORMAL_BUTTON_COLOR.into(),
+                        ..default()
+                    },
+                    ExitGameButton,
+                ))
+                .with_children(|parent| {
+                    parent.spawn(TextBundle {
+                        text: Text {
+                            sections: vec![TextSection::new(
+                                "Quit",
                                 get_button_text_style(asset_server),
                             )],
                             alignment: TextAlignment::Center,
