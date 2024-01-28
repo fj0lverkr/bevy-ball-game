@@ -19,7 +19,7 @@ impl Plugin for ScorePlugin {
                 Update,
                 (
                     update_score.run_if(in_state(GameState::GameRunning)),
-                    update_highscores,
+                    update_highscores.run_if(in_state(GameState::GameOver)),
                     highscores_updated,
                 ),
             );
